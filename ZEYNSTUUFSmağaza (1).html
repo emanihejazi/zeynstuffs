@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zeyn'stuffs Mağazası</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #fff0f6;
+      color: #4a2c3b;
+    }
+    h1 {
+      text-align: center;
+      color: #c96c91;
+      padding: 20px 0;
+      font-style: italic;
+    }
+    .magaza-adi {
+      text-align: center;
+      font-size: 32px;
+      font-weight: bold;
+      color: #c96c91;
+      margin: 20px 0;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 12px;
+      padding: 20px;
+    }
+    .kutucuk {
+      background-color: #fdd7e4;
+      padding: 16px;
+      border-radius: 12px;
+      text-align: center;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .kutucuk:hover {
+      background-color: #fbcad8;
+    }
+    .sayfa {
+      display: none;
+      padding-bottom: 80px;
+    }
+    .aktif {
+      display: block;
+    }
+    .alt-menu {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background-color: #ffeef1;
+      display: flex;
+      justify-content: space-around;
+      padding: 10px 0;
+      border-top: 1px solid #ccc;
+    }
+    .alt-menu div {
+      text-align: center;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    .promo-kutular {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+    .promo-kutu {
+      background-color: white;
+      padding: 15px;
+      border-radius: 10px;
+      text-align: center;
+      cursor: pointer;
+      transition: 0.3s;
+      height: 200px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .promo-kutu img {
+      width: 100%;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 8px;
+      background-color: #f8f8f8;
+    }
+    .promo-kutu p {
+      margin: 10px 0 0;
+      font-size: 16px;
+    }
+    .promo-kutu:hover {
+      background-color: #fdd7e4;
+    }
+    .urun-kutular {
+      padding: 20px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 15px;
+    }
+    .urun-kutu {
+      background-color: white;
+      padding: 15px;
+      border-radius: 10px;
+      text-align: center;
+      cursor: pointer;
+      transition: 0.3s;
+      height: 200px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .urun-kutu img {
+      width: 100%;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 8px;
+      background-color: #f8f8f8;
+    }
+    .urun-kutu p {
+      margin: 10px 0 0;
+    }
+    .urun-kutu:hover {
+      background-color: #fdd7e4;
+    }
+    .kategori-container {
+      padding: 20px;
+    }
+    .kategori-btn {
+      background-color: white;
+      padding: 15px;
+      border-radius: 10px;
+      text-align: center;
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .form-container {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      margin: 20px;
+      display: none;
+    }
+    .geri-btn {
+      background: none;
+      border: none;
+      color: #c96c91;
+      cursor: pointer;
+      margin-bottom: 10px;
+    }
+    .urun {
+      background-color: white;
+      padding: 15px;
+      margin: 10px;
+      border-radius: 10px;
+      text-align: center;
+    }
+    .urun img {
+      max-width: 100%;
+      height: auto;
+    }
+    .alt-kategori {
+      background-color: #f8f8f8;
+      padding: 10px;
+      margin: 5px 0 5px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .alt-kategori:hover {
+      background-color: #f0e0e8;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 8px;
+      margin: 5px 0;
+      box-sizing: border-box;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+    button {
+      background-color: #c96c91;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #b55a7d;
+    }
+    img::before {
+      content: "Görsel yüklenemedi";
+      display: block;
+      color: #999;
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+<h1 id="sayfaBaslik">Ana Sayfa</h1>
+<div class="magaza-adi">ZEYN'STUFFS</div>
+<div id="anaSayfa" class="sayfa aktif">
+  <div style="text-align: center; margin: 20px;">
+    <input type="text" id="aramaKutusu" placeholder="Ürün ara...">
+    <button onclick="aramaYap()">Ara</button>
+  </div>
+  <p id="aramaSonucu" style="text-align: center; font-style: italic;"></p>
+  <div class="promo-kutular">
+    <div class="promo-kutu" onclick="alert('Yeni Koleksiyon açılıyor...')">
+      <img src="https://cdni.needion.com/yilbasi-ozel-krem-hediye-kutulu-mutlu-yillar-etiketli-dekor-kavanoz-mum-amber-33-ps155736892" alt="Aromatik Mum" loading="lazy">
+      <p>Yeni Koleksiyon</p>
+    </div>
+    <div class="promo-kutu" onclick="alert('%20 İndirim ürünleri açılıyor...')">
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQTp8TC4wTFHJQ8HWprQ5vScBvE7zODOZ2tJw&s" alt="El Yapımı Çanta" loading="lazy">
+      <p>%20 İndirim</p>
+    </div>
+    <div class="promo-kutu" onclick="alert('2 Al 1 Öde kampanyası açılıyor...')">
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTOMyM-qImFDgAamjHH4csU2UimatEQoN13bQ&s" alt="Özel Kolye" loading="lazy">
+      <p>2 Al 1 Öde</p>
+    </div>
+  </div>
+  <div class="urun-kutular">
+    <div class="urun-kutu" onclick="alert('Doğum Günü Seti detayları...')">
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT5xstN4PCIo138SMrLV2p1JgC82LczMz-73g&s" alt="Hediye Seti" loading="lazy">
+      <p>Doğum Günü Seti</p>
+      <p style="color: #c96c91; font-weight: bold;">349.99 TL</p>
+    </div>
+    <div class="urun-kutu" onclick="alert('Yeni Yıl Hediyesi detayları...')">
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTzymi1xMaCZ5CGl727Rm6pA50b4EPxO6gZ5Q&s" alt="Hediye Kutusu" loading="lazy">
+      <p>Yeni Yıl Hediyesi</p>
+      <p style="color: #c96c91; font-weight: bold;">299.99 TL</p>
+    </div>
+    <div class="urun-kutu" onclick="alert('Özel Kolye detayları...')">
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSQcwRucAIP2HobKSGvDXAbzoP9CmfUMJtxCg&s" alt="Kolye" loading="lazy">
+      <p>Özel Kolye</p>
+      <p style="color: #c96c91; font-weight: bold;">199.99 TL</p>
+    </div>
+    <div class="urun-kutu" onclick="alert('El Yapımı Çanta detayları...')">
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTD7vx_YbdQpovnYW3iDElp6-KT1VbTbUjTPQ&s" alt="Çanta" loading="lazy">
+      <p>El Yapımı Çanta</p>
+      <p style="color: #c96c91; font-weight: bold;">549.99 TL</p>
+    </div>
+    <div class="urun-kutu" onclick="alert('Aromatik Mum detayları...')">
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQsUTabjqbH-Q7SO13oC_1mrrSEMUyANH0Y3w&s" alt="Mum" loading="lazy">
+      <p>Aromatik Mum</p>
+      <p style="color: #c96c91; font-weight: bold;">259.99 TL</p>
+    </div>
+  </div>
+</div>
+<div id="kategori" class="sayfa">
+  <div class="kategori-container">
+    <div class="kategori-btn" onclick="toggleAltKategori('mumlar')">Mumlar ▼</div>
+    <div id="mumlar" style="display:none;">
+      <div class="alt-kategori" onclick="alert('Kokulu mumlar listeleniyor...')">Kokulu Mumlar</div>
+      <div class="alt-kategori" onclick="alert('Dekoratif mumlar listeleniyor...')">Dekoratif Mumlar</div>
+      <div class="alt-kategori" onclick="alert('Aromaterapi mumları listeleniyor...')">Aromaterapi Mumları</div>
+    </div>
+    <div class="kategori-btn" onclick="toggleAltKategori('dekorasyon')">Dekorasyon ▼</div>
+    <div id="dekorasyon" style="display:none;">
+      <div class="alt-kategori" onclick="alert('Duvar dekorları listeleniyor...')">Duvar Dekorları</div>
+      <div class="alt-kategori" onclick="alert('Masa dekorları listeleniyor...')">Masa Dekorları</div>
+      <div class="alt-kategori" onclick="alert('Bahçe dekorları listeleniyor...')">Bahçe Dekorları</div>
+    </div>
+    <div class="kategori-btn" onclick="toggleAltKategori('hediyelik')">Hediyelikler ▼</div>
+    <div id="hediyelik" style="display:none;">
+      <div class="alt-kategori" onclick="alert('Özel gün hediyeleri listeleniyor...')">Özel Gün Hediyeleri</div>
+      <div class="alt-kategori" onclick="alert('Kişiye özel hediyeler listeleniyor...')">Kişiye Özel Hediyeler</div>
+      <div class="alt-kategori" onclick="alert('Hediye paketleri listeleniyor...')">Hediye Paketleri</div>
+    </div>
+  </div>
+</div>
+<div id="favori" class="sayfa">
+  <p style="text-align: center;">Henüz favori ürün yok.</p>
+</div>
+<div id="sepet" class="sayfa">
+  <p style="text-align: center;">Sepetiniz boş.</p>
+</div>
+<div id="hesap" class="sayfa">
+  <div class="grid" id="accountGrid">
+    <div class="kutucuk" onclick="showForm('personalInfo')">Kişisel Bilgiler</div>
+    <div class="kutucuk" onclick="showForm('addressInfo')">Adres Bilgileri</div>
+    <div class="kutucuk" onclick="showForm('paymentInfo')">Kart Bilgileri</div>
+    <div class="kutucuk" onclick="showForm('orderInfo')">Siparişler</div>
+    <div class="kutucuk" onclick="showForm('favoritesInfo')">Favoriler</div>
+    <div class="kutucuk" onclick="showForm('passwordUpdate')">Şifre Güncelle</div>
+    <div class="kutucuk" onclick="showForm('deleteAccount')">Hesap Sil</div>
+    <div class="kutucuk" onclick="alert('Çıkış yapılıyor...')" style="background-color:#ffcccc;">Çıkış Yap</div>
+  </div>
+  <div id="personalInfoForm" class="form-container">
+    <button class="geri-btn" onclick="hideForm('personalInfoForm')">← Geri</button>
+    <h3>Kişisel Bilgiler</h3>
+    <input type="text" placeholder="Ad"><br><br>
+    <input type="text" placeholder="Soyad"><br><br>
+    <input type="email" placeholder="E-posta"><br><br>
+    <button onclick="hideForm('personalInfoForm')">Kaydet</button>
+  </div>
+  <div id="addressInfoForm" class="form-container">
+    <button class="geri-btn" onclick="hideForm('addressInfoForm')">← Geri</button>
+    <h3>Adres Bilgileri</h3>
+    <textarea placeholder="Adresinizi yazın" rows="4"></textarea><br><br>
+    <button onclick="hideForm('addressInfoForm')">Kaydet</button>
+  </div>
+  <div id="paymentInfoForm" class="form-container">
+    <button class="geri-btn" onclick="hideForm('paymentInfoForm')">← Geri</button>
+    <h3>Kart Bilgileri</h3>
+    <p>Kayıtlı Kart: <strong>VISA •••• •••• •••• 4242 (12/25)</strong></p>
+    <input type="text" placeholder="Kart Numarası"><br><br>
+    <input type="text" placeholder="Kart Üzerindeki İsim"><br><br>
+    <div style="display:flex; gap:10px;">
+      <input type="text" placeholder="Son Kullanma (AA/YY)" style="flex:1;">
+      <input type="text" placeholder="CVV" style="width:80px;">
+    </div><br>
+    <button onclick="hideForm('paymentInfoForm')">Kaydet</button>
+  </div>
+  <div id="orderInfoForm" class="form-container">
+    <button class="geri-btn" onclick="hideForm('orderInfoForm')">← Geri</button>
+    <h3>Siparişler</h3>
+    <p>Henüz sipariş yok.</p>
+  </div>
+  <div id="favoritesInfoForm" class="form-container">
+    <button class="geri-btn" onclick="hideForm('favoritesInfoForm')">← Geri</button>
+    <h3>Favoriler</h3>
+    <p>Favori ürün listeniz burada görüntülenecek.</p>
+  </div>
+  <div id="passwordUpdateForm" class="form-container">
+    <button class="geri-btn" onclick="hideForm('passwordUpdateForm')">← Geri</button>
+    <h3>Şifre Güncelle</h3>
+    <input type="password" placeholder="Eski Şifre"><br><br>
+    <input type="password" placeholder="Yeni Şifre"><br><br>
+    <input type="password" placeholder="Yeni Şifre Tekrar"><br><br>
+    <button onclick="hideForm('passwordUpdateForm')">Güncelle</button>
+  </div>
+  <div id="deleteAccountForm" class="form-container">
+    <button class="geri-btn" onclick="hideForm('deleteAccountForm')">← Geri</button>
+    <h3>Hesap Sil</h3>
+    <p>Bu işlem geri alınamaz!</p>
+    <button style="background-color:red; color:white;" onclick="alert('Hesabınız silindi')">Hesabımı Sil</button>
+  </div>
+</div>
+<div class="alt-menu">
+  <div onclick="sayfaGoster('anaSayfa', 'Ana Sayfa')">🏠<br>Ana Sayfa</div>
+  <div onclick="sayfaGoster('kategori', 'Kategoriler')">🗂️<br>Kategoriler</div>
+  <div onclick="sayfaGoster('favori', 'Favoriler')">❤️<br>Favori</div>
+  <div onclick="sayfaGoster('sepet', 'Sepet')">🛒<br>Sepet</div>
+  <div onclick="sayfaGoster('hesap', 'Hesap')">👤<br>Hesap</div>
+</div>
+<script>
+  function sayfaGoster(id, baslik) {
+    document.querySelectorAll('.sayfa').forEach(e => e.classList.remove('aktif'));
+    document.getElementById(id).classList.add('aktif');
+    document.getElementById('sayfaBaslik').innerText = baslik;
+  }
+  function aramaYap() {
+    const kelime = document.getElementById('aramaKutusu').value;
+    document.getElementById('aramaSonucu').innerText = `"${kelime}" için arama sonuçları.`;
+  }
+  function showForm(id) {
+    document.getElementById('accountGrid').style.display = "none";
+    document.querySelectorAll('.form-container').forEach(e => e.style.display = "none");
+    document.getElementById(id + 'Form').style.display = "block";
+  }
+  function hideForm(id) {
+    document.getElementById(id).style.display = "none";
+    document.getElementById('accountGrid').style.display = "grid";
+  }
+  function toggleAltKategori(id) {
+    const element = document.getElementById(id);
+    if (element.style.display === "none") {
+      element.style.display = "block";
+    } else {
+      element.style.display = "none";
+    }
+  }
+  document.addEventListener('DOMContentLoaded', function() {
+    sayfaGoster('anaSayfa', 'Ana Sayfa');
+  });
+</script>
+</body>
+</html>
